@@ -13,15 +13,15 @@ class Item: NSObject, NSCoding {
     var name: String
     var valueInDollars: Int
     var serialNumber: String?
-    let dateCreated: NSDate
+    let dateCreated: Date
     let itemKey: String
     
     init(name: String, serialNumber: String?, valueInDollars: Int) {
         self.name = name
         self.serialNumber = serialNumber
         self.valueInDollars = valueInDollars
-        self.dateCreated = NSDate()
-        self.itemKey = NSUUID().UUIDString
+        self.dateCreated = Date()
+        self.itemKey = UUID().uuidString
     }
     
     convenience init(random: Bool = false) {
@@ -38,7 +38,7 @@ class Item: NSObject, NSCoding {
             let randomName = "\(randomAdjective) \(randomNoun)"
             let randomValue = Int(arc4random_uniform(100))
             let randomSerialNumber =
-            NSUUID().UUIDString.componentsSeparatedByString("-").first!
+            UUID().uuidString.components(separatedBy: "-").first!
             
             self.init(name: randomName,
                 serialNumber: randomSerialNumber,
@@ -50,23 +50,23 @@ class Item: NSObject, NSCoding {
     }
     
     required init(coder aDecoder: NSCoder) {
-        name = aDecoder.decodeObjectForKey("name") as! String
-        dateCreated = aDecoder.decodeObjectForKey("dateCreated") as! NSDate
-        itemKey = aDecoder.decodeObjectForKey("itemKey") as! String
-        serialNumber = aDecoder.decodeObjectForKey("serialNumber") as! String?
+        name = aDecoder.decodeObject(forKey: "name") as! String
+        dateCreated = aDecoder.decodeObject(forKey: "dateCreated") as! Date
+        itemKey = aDecoder.decodeObject(forKey: "itemKey") as! String
+        serialNumber = aDecoder.decodeObject(forKey: "serialNumber") as! String?
         
-        valueInDollars = aDecoder.decodeIntegerForKey("valueInDollars")
+        valueInDollars = aDecoder.decodeInteger(forKey: "valueInDollars")
         
         super.init()
     }
     
-    func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(name, forKey: "name")
-        aCoder.encodeObject(dateCreated, forKey: "dateCreated")
-        aCoder.encodeObject(itemKey, forKey: "itemKey")
-        aCoder.encodeObject(serialNumber, forKey: "serialNumber")
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(name, forKey: "name")
+        aCoder.encode(dateCreated, forKey: "dateCreated")
+        aCoder.encode(itemKey, forKey: "itemKey")
+        aCoder.encode(serialNumber, forKey: "serialNumber")
         
-        aCoder.encodeInteger(valueInDollars, forKey: "valueInDollars")
+        aCoder.encode(valueInDollars, forKey: "valueInDollars")
     }
     
 }

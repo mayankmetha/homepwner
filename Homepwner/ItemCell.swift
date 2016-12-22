@@ -15,11 +15,11 @@ class ItemCell: UITableViewCell {
     @IBOutlet var valueLabel: UILabel!
     
     func updateLabels() {
-        let bodyFont = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+        let bodyFont = UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)
         nameLabel.font = bodyFont
         valueLabel.font = bodyFont
         
-        let caption1Font = UIFont.preferredFontForTextStyle(UIFontTextStyleCaption1)
+        let caption1Font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.caption1)
         serialNumberLabel.font = caption1Font
     }
     

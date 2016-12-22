@@ -24,27 +24,27 @@ UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     }
     var imageStore: ImageStore!
     
-    @IBAction func takePicture(sender: UIBarButtonItem) {
+    @IBAction func takePicture(_ sender: UIBarButtonItem) {
         
         let imagePicker = UIImagePickerController()
         
         // If the device has a camera, take a picture, otherwise,
         // just pick from photo library
-        if UIImagePickerController.isSourceTypeAvailable(.Camera) {
-            imagePicker.sourceType = .Camera
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            imagePicker.sourceType = .camera
         }
         else {
-            imagePicker.sourceType = .PhotoLibrary
+            imagePicker.sourceType = .photoLibrary
         }
         
         imagePicker.delegate = self
         
         // Place image picker on the screen
-        presentViewController(imagePicker, animated: true, completion: nil)
+        present(imagePicker, animated: true, completion: nil)
     }
     
-    func imagePickerController(picker: UIImagePickerController,
-        didFinishPickingMediaWithInfo info: [String: AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController,
+        didFinishPickingMediaWithInfo info: [String: Any]) {
             
             // Get picked image from info dictionary
             let image = info[UIImagePickerControllerOriginalImage] as! UIImage
@@ -57,33 +57,33 @@ UINavigationControllerDelegate, UIImagePickerControllerDelegate {
             
             // Take image picker off the screen -
             // you must call this dismiss method
-            dismissViewControllerAnimated(true, completion: nil)
+            dismiss(animated: true, completion: nil)
     }
     
     
     
-    let numberFormatter: NSNumberFormatter = {
-        let formatter = NSNumberFormatter()
-        formatter.numberStyle = .DecimalStyle
+    let numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 2
         return formatter
     }()
     
-    let dateFormatter: NSDateFormatter = {
-        let formatter = NSDateFormatter()
-        formatter.dateStyle = .MediumStyle
-        formatter.timeStyle = .NoStyle
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
         return formatter
     }()
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         nameField.text = item.name
         serialNumberField.text = item.serialNumber
-        valueField.text = numberFormatter.stringFromNumber(item.valueInDollars)
-        dateLabel.text = dateFormatter.stringFromDate(item.dateCreated)
+        valueField.text = numberFormatter.string(from: NSNumber(value: item.valueInDollars))
+        dateLabel.text = dateFormatter.string(from: item.dateCreated as Date)
         
         // Get the item key
         let key = item.itemKey
@@ -95,7 +95,7 @@ UINavigationControllerDelegate, UIImagePickerControllerDelegate {
         }
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         // Clear first responder
@@ -106,19 +106,19 @@ UINavigationControllerDelegate, UIImagePickerControllerDelegate {
         item.serialNumber = serialNumberField.text
         
         if let valueText = valueField.text,
-            let value = numberFormatter.numberFromString(valueText) {
-                item.valueInDollars = value.integerValue
+            let value = numberFormatter.number(from: valueText) {
+                item.valueInDollars = value.intValue
         }
         else {
             item.valueInDollars = 0
         }
     }
     
-    @IBAction func backgroundTapped(sender: UITapGestureRecognizer) {
+    @IBAction func backgroundTapped(_ sender: UITapGestureRecognizer) {
         view.endEditing(true)
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }

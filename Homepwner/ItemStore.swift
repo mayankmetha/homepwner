@@ -11,22 +11,22 @@ import Foundation
 class ItemStore {
     
     var allItems: [Item] = []
-    let itemArchiveURL: NSURL = {
+    let itemArchiveURL: URL = {
         let documentsDirectories =
-        NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory,
-            inDomains: .UserDomainMask)
+        FileManager.default.urls(for: .documentDirectory,
+            in: .userDomainMask)
         let documentDirectory = documentsDirectories.first!
-        return documentDirectory.URLByAppendingPathComponent("items.archive")
+        return documentDirectory.appendingPathComponent("items.archive")
     }()
     
     init() {
         if let archivedItems =
-            NSKeyedUnarchiver.unarchiveObjectWithFile(itemArchiveURL.path!) as? [Item] {
+            NSKeyedUnarchiver.unarchiveObject(withFile: itemArchiveURL.path) as? [Item] {
                 allItems += archivedItems
         }
     }
     
-    func moveItemAtIndex(fromIndex: Int, toIndex: Int) {
+    func moveItemAtIndex(_ fromIndex: Int, toIndex: Int) {
         if fromIndex == toIndex {
             return
         }
@@ -35,10 +35,10 @@ class ItemStore {
         let movedItem = allItems[fromIndex]
         
         // Remove item from array
-        allItems.removeAtIndex(fromIndex)
+        allItems.remove(at: fromIndex)
         
         // Insert item in array at new location
-        allItems.insert(movedItem, atIndex: toIndex)
+        allItems.insert(movedItem, at: toIndex)
     }
     
     func createItem() -> Item {
@@ -49,15 +49,15 @@ class ItemStore {
         return newItem
     }
     
-    func removeItem(item: Item) {
-        if let index = allItems.indexOf(item) {
-            allItems.removeAtIndex(index)
+    func removeItem(_ item: Item) {
+        if let index = allItems.index(of: item) {
+            allItems.remove(at: index)
         }
     }
     
     func saveChanges() -> Bool {
-        print("Saving items to: \(itemArchiveURL.path!)")
-        return NSKeyedArchiver.archiveRootObject(allItems, toFile: itemArchiveURL.path!)
+        print("Saving items to: \(itemArchiveURL.path)")
+        return NSKeyedArchiver.archiveRootObject(allItems, toFile: itemArchiveURL.path)
     }
     
 }
